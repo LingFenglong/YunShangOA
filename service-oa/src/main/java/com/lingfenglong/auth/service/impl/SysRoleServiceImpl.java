@@ -1,4 +1,4 @@
-package com.lingfenglong.auth.mapper.impl;
+package com.lingfenglong.auth.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lingfenglong.auth.mapper.SysRoleMapper;

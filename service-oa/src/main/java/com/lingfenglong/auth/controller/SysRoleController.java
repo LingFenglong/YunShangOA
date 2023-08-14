@@ -4,12 +4,16 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lingfenglong.auth.service.SysRoleService;
+import com.lingfenglong.common.collections.ObjectHashMap;
+import com.lingfenglong.common.collections.ParameterMap;
 import com.lingfenglong.common.result.Result;
 import com.lingfenglong.model.system.SysRole;
+import com.lingfenglong.vo.system.AssginRoleVo;
 import com.lingfenglong.vo.system.SysRoleQueryVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +28,20 @@ public class SysRoleController {
     @Autowired
     public SysRoleController(SysRoleService sysRoleService) {
         this.sysRoleService = sysRoleService;
+    }
+
+    @Operation(summary = "获取用户所有角色")
+    @GetMapping("/toAssign/{userId}")
+    public Result<ObjectHashMap> toAssign(@PathVariable Long userId) {
+        ObjectHashMap map = sysRoleService.findRoleDataByUserId(userId);
+        return Result.ok(map);
+    }
+
+    @Operation(summary = "用户分配角色")
+    @GetMapping("/doAssign")
+    public Result<?> doAssign(@RequestBody AssginRoleVo assginRoleVo) {
+        sysRoleService.doAssign(assginRoleVo);
+        return Result.ok(null);
     }
 
     @Operation(summary = "查询所有角色", description = "查询所有角色，返回json")

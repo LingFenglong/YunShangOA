@@ -25,7 +25,7 @@ import java.util.List;
  * @author lingfenglong
  * @since 2023-08-11
  */
-@Controller
+@RestController
 @Tag(name = "用户管理", description = "用户管理的接口")
 @RequestMapping("/admin/system/sysUser")
 public class SysUserController {
@@ -37,10 +37,19 @@ public class SysUserController {
         this.sysUserService = sysUserService;
     }
 
+    // 更改状态
+    @Operation(summary = "更改用户状态")
+    @GetMapping("/updateStatus/{id}/{status}")
+    public Result<?> updateStatus(@PathVariable("id") Long id,
+                                  @PathVariable("status") Integer status) {
+        sysUserService.updateStatus(id, status);
+        return Result.ok(null);
+    }
+
     @Operation(summary = "查询所有用户", description = "查询所有用户")
     @GetMapping("/findAll")
     public Result<List<SysUser>> findAll() {
-        return Result.ok(sysUserService.list());
+        return Result.ok(sysUserService.list(null));
     }
 
     // 用户条件分页查询

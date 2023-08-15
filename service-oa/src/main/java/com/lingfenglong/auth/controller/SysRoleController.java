@@ -38,7 +38,7 @@ public class SysRoleController {
     }
 
     @Operation(summary = "用户分配角色")
-    @GetMapping("/doAssign")
+    @PostMapping("/doAssign")
     public Result<?> doAssign(@RequestBody AssginRoleVo assginRoleVo) {
         sysRoleService.doAssign(assginRoleVo);
         return Result.ok(null);

@@ -25,8 +25,10 @@ public class CodeGet {
                                     "D:\\University\\code\\java\\mycode\\YunShangOA\\YunShangOA\\service-oa\\src\\main\\resources\\mapper")); // 设置mapperXml生成路径
                 })
                 .strategyConfig(builder -> {
-//                    builder.addInclude("sys_user") // 设置需要生成的表名
-                    builder.addInclude("sys_user_role") // 设置需要生成的表名
+                    builder
+                            .addInclude("sys_menu", "sys_role_menu")
+//                            .addInclude("sys_user") // 设置需要生成的表名
+//                            .addInclude("sys_user_role") // 设置需要生成的表名
 //                            .addTablePrefix("t_", "c_") // 设置过滤表前缀
                             .serviceBuilder().formatServiceFileName("%sService");
                 })

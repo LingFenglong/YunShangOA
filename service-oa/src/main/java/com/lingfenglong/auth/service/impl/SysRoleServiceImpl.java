@@ -9,12 +9,15 @@ import com.lingfenglong.common.collections.ObjectHashMap;
 import com.lingfenglong.model.system.SysRole;
 import com.lingfenglong.model.system.SysUserRole;
 import com.lingfenglong.vo.system.AssginRoleVo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> implements SysRoleService {
     private final SysUserRoleService sysUserRoleService;
@@ -24,6 +27,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
         this.sysUserRoleService = sysUserRoleService;
     }
 
+    @Transactional
     @Override
     public ObjectHashMap findRoleDataByUserId(Long userId) {
         // 查询所有的角色数据
@@ -47,10 +51,11 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
         ObjectHashMap res = new ObjectHashMap();
         res.put("allRoleList", allRoleList);
         res.put("assignRoleList", assignRoleList);
-
+        log.info("res = " + res);
         return res;
     }
 
+    @Transactional
     @Override
     public void doAssign(AssginRoleVo assginRoleVo) {
         Long userId = assginRoleVo.getUserId();
@@ -63,6 +68,6 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
 
         // 重新分配
         assginRoleVo.getRoleIdList()
-                .forEach(roleId -> sysUserRoleService.save(new SysUserRole(userId, roleId)));
+                .forEach(roleId -> sysUserRoleService.save(new SysUserRole(roleId, userId)));
     }
 }

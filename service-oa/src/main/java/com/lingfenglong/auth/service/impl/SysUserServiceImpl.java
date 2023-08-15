@@ -6,6 +6,7 @@ import com.lingfenglong.auth.mapper.SysUserMapper;
 import com.lingfenglong.auth.service.SysUserService;
 import com.lingfenglong.model.system.SysUser;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <p>
@@ -15,9 +16,11 @@ import org.springframework.stereotype.Service;
  * @author lingfenglong
  * @since 2023-08-11
  */
+@Transactional
 @Service
 public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements SysUserService {
 
+    // 更改用户状态
     @Override
     public void updateStatus(Long id, Integer status) {
         LambdaUpdateWrapper<SysUser> wrapper = new LambdaUpdateWrapper<>();

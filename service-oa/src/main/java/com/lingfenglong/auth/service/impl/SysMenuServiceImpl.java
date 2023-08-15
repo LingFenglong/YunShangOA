@@ -1,6 +1,7 @@
 package com.lingfenglong.auth.service.impl;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lingfenglong.auth.mapper.SysMenuMapper;
@@ -32,11 +33,19 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     }
 
     @Override
-    public void removeMenuById(Long id) {
-        LambdaUpdateWrapper<SysMenu> wrapper = new LambdaUpdateWrapper<>();
+    public boolean removeMenuById(Long id) {
+        LambdaQueryWrapper<SysMenu> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(SysMenu::getId, id);
 
         List<SysMenu> sysMenuList = baseMapper.selectList(null);
-        sysMenuList.stream()
-                .filter()
+        boolean flag = sysMenuList.stream()
+                .anyMatch(sysMenu -> sysMenu.getParentId().equals(id));
+
+        if (flag) {
+            return false;
+        } else {
+            baseMapper.delete(wrapper);
+            return true;
+        }
     }
 }

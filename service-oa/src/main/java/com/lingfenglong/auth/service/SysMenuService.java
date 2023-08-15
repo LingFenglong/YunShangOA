@@ -17,5 +17,5 @@ public interface SysMenuService extends IService<SysMenu> {
 
     List<SysMenu> findNodes();
 
-    void removeMenuById(Long id);
+    boolean removeMenuById(Long id);
 }

@@ -1,7 +1,10 @@
 package com.lingfenglong.auth.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lingfenglong.common.result.Result;
 import com.lingfenglong.model.system.SysMenu;
+import com.lingfenglong.vo.system.AssignMenuVo;
+import com.lingfenglong.vo.system.AssignRoleVo;
 
 import java.util.List;
 
@@ -18,4 +21,8 @@ public interface SysMenuService extends IService<SysMenu> {
     List<SysMenu> findNodes();
 
     boolean removeMenuById(Long id);
+
+    Result<List<SysMenu>> findMenuByRoleId(Long roleId);
+
+    void doAssign(AssignMenuVo assignMenuVo);
 }

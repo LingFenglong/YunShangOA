@@ -5,15 +5,13 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lingfenglong.auth.service.SysRoleService;
 import com.lingfenglong.common.collections.ObjectHashMap;
-import com.lingfenglong.common.collections.ParameterMap;
 import com.lingfenglong.common.result.Result;
 import com.lingfenglong.model.system.SysRole;
-import com.lingfenglong.vo.system.AssginRoleVo;
+import com.lingfenglong.vo.system.AssignRoleVo;
 import com.lingfenglong.vo.system.SysRoleQueryVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,8 +37,8 @@ public class SysRoleController {
 
     @Operation(summary = "用户分配角色")
     @PostMapping("/doAssign")
-    public Result<?> doAssign(@RequestBody AssginRoleVo assginRoleVo) {
-        sysRoleService.doAssign(assginRoleVo);
+    public Result<?> doAssign(@RequestBody AssignRoleVo assignRoleVo) {
+        sysRoleService.doAssign(assignRoleVo);
         return Result.ok(null);
     }
 

@@ -8,7 +8,7 @@ import com.lingfenglong.auth.service.SysUserRoleService;
 import com.lingfenglong.common.collections.ObjectHashMap;
 import com.lingfenglong.model.system.SysRole;
 import com.lingfenglong.model.system.SysUserRole;
-import com.lingfenglong.vo.system.AssginRoleVo;
+import com.lingfenglong.vo.system.AssignRoleVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,8 +57,8 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
 
     @Transactional
     @Override
-    public void doAssign(AssginRoleVo assginRoleVo) {
-        Long userId = assginRoleVo.getUserId();
+    public void doAssign(AssignRoleVo assignRoleVo) {
+        Long userId = assignRoleVo.getUserId();
 
         // 删除所有id的角色
         sysUserRoleService.remove(
@@ -67,7 +67,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
         );
 
         // 重新分配
-        assginRoleVo.getRoleIdList()
+        assignRoleVo.getRoleIdList()
                 .forEach(roleId -> sysUserRoleService.save(new SysUserRole(roleId, userId)));
     }
 }

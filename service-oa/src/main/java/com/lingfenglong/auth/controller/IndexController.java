@@ -1,17 +1,23 @@
 package com.lingfenglong.auth.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.lingfenglong.auth.service.SysMenuService;
 import com.lingfenglong.auth.service.SysUserService;
+import com.lingfenglong.common.collections.ObjectHashMap;
 import com.lingfenglong.common.collections.ParameterMap;
 import com.lingfenglong.common.config.exception.MyException;
 import com.lingfenglong.common.jwt.JwtHelper;
 import com.lingfenglong.common.result.Result;
+import com.lingfenglong.model.system.SysMenu;
 import com.lingfenglong.model.system.SysUser;
 import com.lingfenglong.vo.system.LoginVo;
+import com.lingfenglong.vo.system.RouterVo;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @Tag(name = "登录控制器")
@@ -20,10 +26,12 @@ import org.springframework.web.bind.annotation.*;
 public class IndexController {
 
     private final SysUserService sysUserService;
+    private final SysMenuService sysMenuService;
 
     @Autowired
-    public IndexController(SysUserService sysUserService) {
+    public IndexController(SysUserService sysUserService, SysMenuService sysMenuService) {
         this.sysUserService = sysUserService;
+        this.sysMenuService = sysMenuService;
     }
 
     // login
@@ -34,7 +42,7 @@ public class IndexController {
 //        data.add("token", "admin-token");
 
         // 应该在前端进行加密
-        String password = new String(DigestUtils.md5Digest(loginVo.getPassword().getBytes()));
+        String password = DigestUtils.md5DigestAsHex(loginVo.getPassword().getBytes());
 
         LambdaQueryWrapper<SysUser> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(SysUser::getUsername, loginVo.getUsername());
@@ -56,11 +64,24 @@ public class IndexController {
 
     // info
     @GetMapping("/info")
-    public Result<ParameterMap> info() {
-        ParameterMap data = new ParameterMap();
-        data.add("roles", "[admin]");
-        data.add("name", "admin");
-        data.add("avatar", "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
+    public Result<ObjectHashMap> info(@RequestHeader String token) {
+        // 从header中获取token，并获得 userId
+        Long userId = JwtHelper.getUserId(token);
+
+        // 数据库中查找用户
+        SysUser user = sysUserService.getById(userId);
+
+        // 获取用户的路由
+        List<RouterVo> routerList = sysMenuService.findUserMenuByUserId(userId);
+        // 获取按钮权限
+        List<String> permsList = sysMenuService.findUserPermsByUserId(userId);
+
+        ObjectHashMap data = new ObjectHashMap();
+        data.put("roles", "[admin]");
+        data.put("name", user.getUsername());
+        data.put("avatar", "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
+        data.put("routers", routerList);
+        data.put("buttons", permsList);
 
         return Result.ok(data);
     }

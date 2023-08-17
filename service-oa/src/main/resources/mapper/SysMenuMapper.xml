@@ -2,4 +2,29 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lingfenglong.auth.mapper.SysMenuMapper">
 
+    <select id="findMenuListByUserId" resultType="com.lingfenglong.model.system.SysMenu">
+        select *
+        from `yunshang-oa`.sys_user_role as sur
+        join `yunshang-oa`.sys_role_menu as srm on sur.role_id = srm.role_id
+        join `yunshang-oa`.sys_menu as sm on srm.menu_id = sm.id
+        where status = 1
+            and user_id = #{userId}
+            and sur.is_deleted = 0
+            and srm.is_deleted = 0
+            and sm.is_deleted = 0
+        order by sm.sort_value
+    </select>
+
+    <select id="findPermsListByUserId" resultType="String">
+        select sm.perms
+        from `yunshang-oa`.sys_user_role as sur
+                 join `yunshang-oa`.sys_role_menu as srm on sur.role_id = srm.role_id
+                 join `yunshang-oa`.sys_menu as sm on srm.menu_id = sm.id
+        where status = 1
+          and user_id = #{userId}
+          and type = 2
+          and sur.is_deleted = 0
+          and srm.is_deleted = 0
+          and sm.is_deleted = 0
+    </select>
 </mapper>

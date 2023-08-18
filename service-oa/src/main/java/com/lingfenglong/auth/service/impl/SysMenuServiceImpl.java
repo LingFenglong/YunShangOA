@@ -125,7 +125,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
                     routerVo.setMeta(new MetaVo(sysMenu.getName(), sysMenu.getIcon()));
 
                     List<SysMenu> children = sysMenu.getChildren();
-                    if (!children.isEmpty() && sysMenu.getType() <= 0) {
+                    if (!children.isEmpty() && sysMenu.getType() <= getTypeNum(2)) {
                         routerVo.setChildren(buildRouter(children));
                     } else {
                         routerVo.setChildren(null);
@@ -133,6 +133,10 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
                     return routerVo;
                 })
                 .collect(Collectors.toList());
+    }
+
+    private Integer getTypeNum(int i) {
+        return i - 2;
     }
 
     /**

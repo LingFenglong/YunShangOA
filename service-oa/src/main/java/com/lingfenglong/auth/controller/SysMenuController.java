@@ -39,7 +39,7 @@ public class SysMenuController {
         return sysMenuService.findMenuByRoleId(roleId);
     }
 
-    @Operation(summary = "角色分配菜单")
+    @Operation(summary = "给角色分配菜单")
     @PostMapping("/doAssign")
     public Result<?> doAssign(@RequestBody AssignMenuVo assignMenuVo) {
         sysMenuService.doAssign(assignMenuVo);

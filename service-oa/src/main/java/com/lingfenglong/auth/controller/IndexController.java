@@ -87,7 +87,7 @@ public class IndexController {
     }
 
     // logout
-    @GetMapping("logout")
+    @PostMapping("logout")
     public Result<ParameterMap> logout() {
         ParameterMap data = new ParameterMap();
 

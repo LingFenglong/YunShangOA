@@ -2,8 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lingfenglong.auth.mapper.SysMenuMapper">
 
+    <!-- 用于select查询公用抽取的列 -->
+    <sql id="columns">
+        sm.id, sm.parent_id, sm.name, sm.type, sm.path,
+        sm.component, sm.perms, sm.icon, sm.sort_value, sm.status,
+        sm.create_time, sm.update_time, sm.is_deleted
+    </sql>
+
     <select id="findMenuListByUserId" resultType="com.lingfenglong.model.system.SysMenu">
-        select *
+        select <include refid="columns"/>
         from `yunshang-oa`.sys_user_role as sur
         join `yunshang-oa`.sys_role_menu as srm on sur.role_id = srm.role_id
         join `yunshang-oa`.sys_menu as sm on srm.menu_id = sm.id

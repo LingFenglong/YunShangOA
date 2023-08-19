@@ -95,6 +95,11 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
                 sysRoleMenuService.save(new SysRoleMenu(roleId, menuId)));
     }
 
+    /**
+     *
+     * @param userId 用户id
+     * @return 用户菜单列表
+     */
     @Override
     public List<RouterVo> findUserMenuByUserId(Long userId) {
         List<SysMenu> sysMenuList;

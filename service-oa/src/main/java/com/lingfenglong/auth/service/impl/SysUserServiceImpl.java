@@ -1,5 +1,6 @@
 package com.lingfenglong.auth.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lingfenglong.auth.mapper.SysUserMapper;
@@ -27,5 +28,13 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         wrapper.eq(SysUser::getId, id)
                 .set(SysUser::getStatus, status);
         baseMapper.update(null, wrapper);
+    }
+
+    @Override
+    public SysUser getUserByUsername(String username) {
+        return baseMapper.selectOne(
+                new LambdaQueryWrapper<SysUser>()
+                        .like(SysUser::getUsername, username)
+        );
     }
 }

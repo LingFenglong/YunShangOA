@@ -72,6 +72,9 @@ public class SysUserController {
     @Operation(summary = "添加用户", description = "添加用户")
     @PostMapping("save")
     public Result<?> save(@RequestBody SysUser sysUser) {
+//        // 使用后端加密
+//        sysUser.setPassword(DigestUtils.md5DigestAsHex(sysUser.getPassword().getBytes()));
+        // 用户密码已在前端加密
         return Result.bool(sysUserService.save(sysUser));
     }
 
@@ -84,6 +87,7 @@ public class SysUserController {
     @Operation(summary = "修改用户", description = "修改用户")
     @PutMapping("/update")
     public Result<?> update(@RequestBody SysUser sysUser) {
+        // 用户密码已在前端加密
         return Result.bool(sysUserService.updateById(sysUser));
     }
 

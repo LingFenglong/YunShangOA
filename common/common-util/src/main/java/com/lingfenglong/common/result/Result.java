@@ -11,7 +11,7 @@ public class Result<T> {
     private Result() {
     }
 
-    private static <T> Result<T> build(T data, ResultCode resultCode) {
+    public static <T> Result<T> build(T data, ResultCode resultCode) {
         Result<T> result = new Result<>();
         result.setData(data);
         result.setCode(resultCode.getCode());

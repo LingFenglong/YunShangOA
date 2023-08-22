@@ -3,13 +3,13 @@ package com.lingfenglong.security.config;
 import com.lingfenglong.security.custom.PasswordEncoderImpl;
 import com.lingfenglong.security.filter.TokenAuthenticationFilter;
 import com.lingfenglong.security.filter.TokenLoginFilter;
-import org.apache.catalina.Manager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -25,24 +25,40 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig implements WebSecurityConfigurer<WebSecurity> {
-//    private final UserDetailsService userDetailsService;
-//    private final PasswordEncoderImpl passwordEncoder;
-//
-//    @Autowired
-//    public WebSecurityConfig(UserDetailsService userDetailsService, PasswordEncoderImpl passwordEncoder) {
-//        this.userDetailsService = userDetailsService;
-//        this.passwordEncoder = passwordEncoder;
-//    }
+    private final UserDetailsService userDetailsService;
+    private final PasswordEncoderImpl passwordEncoder;
+    @Autowired
+    public WebSecurityConfig(UserDetailsService userDetailsServiceImpl, PasswordEncoderImpl passwordEncoder) {
+        this.userDetailsService = userDetailsServiceImpl;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Bean
-    public AuthenticationManager authenticationManager() {
+    public UserDetailsService userDetailsService() {
+        return userDetailsService;
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return passwordEncoder;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager() throws Exception {
         return new ProviderManager();
+//        return new AuthenticationManagerBuilder(new ObjectPostProcessor<Object>() {
+//            @Override
+//            public <O> O postProcess(O object) {
+//                return object;
+//            }
+//        })
+//                .
+//                .build();
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
         http
-                .authenticationManager(authenticationManager)
                 .csrf(AbstractHttpConfigurer::disable)  // 关闭csrf跨站请求伪造
                 .cors(Customizer.withDefaults())        // 开启跨域以便前端调用接口
                 .authorizeHttpRequests(authorize -> authorize
@@ -52,7 +68,7 @@ public class WebSecurityConfig implements WebSecurityConfigurer<WebSecurity> {
                 // TokenAuthenticationFilter放到UsernamePasswordAuthenticationFilter的前面
                 // 这样做就是为了除了登录的时候去查询数据库外，其他时候都用token进行认证
                 .addFilterBefore(new TokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilter(new TokenLoginFilter(new ProviderManager()))
+                .addFilter(new TokenLoginFilter(authenticationManager))
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS));   // 禁用session
 
         return http.build();

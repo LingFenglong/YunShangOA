@@ -23,7 +23,6 @@ import java.io.IOException;
 
 public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
     public TokenLoginFilter(AuthenticationManager authenticationManager) {
-        super(authenticationManager);
         this.setAuthenticationManager(authenticationManager);
         this.setPostOnly(false);
 
@@ -66,7 +65,8 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
      * @throws ServletException
      */
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+                                            FilterChain chain, Authentication authResult) {
         // 获取当前用户
         CustomUser customUser = (CustomUser) authResult.getPrincipal();
 
